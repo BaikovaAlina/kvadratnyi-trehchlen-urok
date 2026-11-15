@@ -1,0 +1,1170 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Квадратный трёхчлен — интерактивный урок</title>
+<meta name="description" content="Интерактивная учебная презентация: график параболы по точкам, знаки коэффициентов a и c, дискриминант, корни квадратного трёхчлена.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231C2E7A'/%3E%3Cpath d='M6 6 Q16 42 26 6' fill='none' stroke='%23FFE46B' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+:root{
+  --paper:#FCFBF5; --grid:#D9E5EF; --ink:#1C2E7A; --ink2:#3450C8; --text:#1B1F2E; --muted:#596178;
+  --red:#C5302A; --red-bg:#FCE8E5; --green:#167A4B; --green-bg:#E2F3E9; --hl:#FFE46B; --amber:#8A5A00; --amber-bg:#FFF3C9;
+  --line:#C9D0E4; --card:#fff;
+  --sans:"PT Sans","Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  --serif:"PT Serif","Iowan Old Style","Palatino Linotype",Georgia,"Times New Roman",serif;
+  --math:Cambria,"PT Serif",Georgia,"Times New Roman",serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%;margin:0}
+body{display:flex;flex-direction:column;height:100vh;height:100dvh;font-family:var(--sans);color:var(--text);background:var(--paper);font-size:clamp(16px,.5vw + 11.5px,20px);line-height:1.5;-webkit-text-size-adjust:100%}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;touch-action:manipulation}
+:focus-visible{outline:3px solid var(--ink2);outline-offset:2px}
+h1,h2,h3{font-family:var(--serif);color:var(--ink);margin:0;line-height:1.15;text-wrap:balance}
+h2{font-size:clamp(1.5rem,2.6vw,2.2rem)}
+h3{font-size:1.05rem}
+p{margin:0}
+i,.m{font-family:var(--math);font-size:1.1em}
+.m i,.formula i,.sol i,.field i,.seg-b i,table.vals i,.sl i,h1 i,h2 i,h3 i,.frac i,.mini figcaption b i{font-size:1em}
+.nb{white-space:nowrap}
+sup,sub{line-height:0}
+mark{background:linear-gradient(transparent 58%,var(--hl) 58%,var(--hl) 92%,transparent 92%);color:inherit;padding:0 .08em;white-space:nowrap}
+
+/* ---------- каркас ---------- */
+.top{flex:none;display:flex;align-items:center;gap:10px;padding:8px 14px;background:#fff;border-bottom:2px solid var(--ink);z-index:2}
+.brand{border:0;background:none;padding:4px 6px;font-family:var(--math);font-size:1.15rem;font-style:italic;color:var(--ink);white-space:nowrap;border-radius:6px}
+.tabs{display:flex;gap:6px;overflow-x:auto;flex:1;scrollbar-width:none;padding:3px}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:none;display:flex;align-items:center;gap:.45em;border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:.28em .8em .28em .32em;font-size:.86rem;color:var(--text);white-space:nowrap}
+.tab .num{display:grid;place-items:center;width:1.7em;height:1.7em;border-radius:50%;background:#EEF1FA;color:var(--ink);font-weight:700;font-size:.9em}
+.tab .cnt{color:var(--muted);font-size:.85em;font-variant-numeric:tabular-nums}
+.tab:hover{border-color:var(--ink)}
+.tab[aria-current="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.tab[aria-current="true"] .num{background:var(--hl);color:var(--ink)}
+.tab[aria-current="true"] .cnt{color:#C9D3FA}
+.tab.full .num{background:var(--green);color:#fff}
+.icon-btn{flex:none;border:1.5px solid var(--line);background:#fff;border-radius:8px;width:2.3em;height:2.3em;display:grid;place-items:center;color:var(--ink)}
+.icon-btn:hover{border-color:var(--ink)}
+
+.stage{flex:1;overflow:auto;position:relative;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:28px 28px;background-attachment:local}
+.slide{max-width:1160px;margin:0 auto;padding:clamp(18px,3vw,40px) clamp(14px,3vw,36px) 48px;animation:in .3s ease both}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.bar{flex:none;display:flex;align-items:center;gap:10px;justify-content:space-between;padding:5px 14px;background:#fff;border-top:1px solid var(--line)}
+.bar .mid{display:flex;flex-direction:column;align-items:center;gap:0;min-width:0;flex:1}
+.dots{display:flex;gap:7px;overflow-x:auto;max-width:100%;padding:6px 7px;scrollbar-width:none}
+.dots::-webkit-scrollbar{display:none}
+.dot{flex:none;width:2em;height:2em;border-radius:50%;border:1.5px solid var(--line);background:#fff;font-size:.8rem;font-weight:700;color:var(--muted);padding:0;font-variant-numeric:tabular-nums}
+.dot:hover{border-color:var(--ink)}
+.dot.ok{background:var(--green);border-color:var(--green);color:#fff}
+.dot.hint{background:var(--amber-bg);border-color:#D9B44A;color:var(--amber)}
+.dot[aria-current="true"]{box-shadow:0 0 0 3px #fff,0 0 0 5px var(--ink);border-color:var(--ink);color:var(--ink)}
+.dot.ok[aria-current="true"]{color:#fff}
+.pos{font-size:.74rem;color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* ---------- кнопки ---------- */
+.btn{border:1.5px solid var(--ink);background:var(--ink);color:#fff;border-radius:8px;padding:.55em 1.1em;font-weight:700;white-space:nowrap;transition:transform .08s,background .15s}
+.btn:hover{background:#142363}
+.btn:active{transform:translateY(1px)}
+.btn.ghost{background:#fff;color:var(--ink)}
+.btn.ghost:hover{background:#EEF1FA}
+.btn.big{font-size:1.1rem;padding:.7em 1.5em}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.go{animation:pulse 1.4s ease-in-out 3}
+@keyframes pulse{50%{box-shadow:0 0 0 7px rgba(52,80,200,.22)}}
+.linkbtn{border:0;background:none;padding:.4em .2em;color:var(--muted);text-decoration:underline dotted;text-underline-offset:3px;font-size:.9rem}
+.linkbtn:hover{color:var(--ink)}
+.row{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}
+
+/* ---------- типовые блоки ---------- */
+.kicker{font-size:.8rem;letter-spacing:.09em;text-transform:uppercase;color:var(--red);font-weight:700;margin-bottom:.5em}
+.lead{font-size:1.1rem;max-width:46em;margin-top:.7em}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:clamp(14px,2vw,24px);box-shadow:0 1px 0 rgba(28,46,122,.06),0 8px 24px -18px rgba(28,46,122,.45)}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(16px,2.5vw,32px);align-items:start;margin-top:1.1em}
+.split.wide-left{grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr)}
+@media (max-width:860px){.split,.split.wide-left{grid-template-columns:1fr}}
+@media (min-width:861px) and (min-height:560px){.sticky{position:sticky;top:12px}}
+.formula{font-family:var(--math);font-size:clamp(1.7rem,4vw,2.7rem);color:var(--ink);line-height:1.25;margin:.35em 0 .1em;white-space:nowrap}
+.formula.mid{font-size:clamp(1.25rem,2.4vw,1.6rem)}
+.plotcard>.formula{margin:.1em .4em .2em}
+.frac{display:inline-flex;flex-direction:column;text-align:center;vertical-align:middle;line-height:1.2;margin:0 .12em;font-size:.92em}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 .3em .05em}
+.frac>span:last-child{padding:.05em .3em 0}
+.rad{border-top:1.5px solid currentColor;padding:0 .1em}
+.note{border-left:4px solid var(--hl);background:#FFFBE6;padding:.6em .9em;border-radius:0 8px 8px 0;font-size:.95rem}
+.list{margin:.6em 0 0;padding-left:1.25em}
+.list li{margin:.35em 0}
+.sub{color:var(--muted);font-size:.93rem}
+
+/* ---------- графики ---------- */
+.plot{display:block;width:100%;height:auto;margin:0 auto;max-height:max(300px,calc(100vh - 300px));touch-action:manipulation;user-select:none;-webkit-user-select:none}
+.plot.active{cursor:crosshair}
+.plot.tall{max-height:max(280px,calc(100vh - 390px))}
+@media (max-width:860px){.plot.tall{max-height:none}}
+.p-bg{fill:#fff}
+.p-grid line{stroke:#DCE5EF;stroke-width:1}
+.p-axes path{stroke:var(--text);stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.p-lab text{font-family:var(--math);fill:#3A4158}
+.p-lab .it{font-style:italic;font-weight:700;fill:var(--text)}
+.p-curve{fill:none;stroke:var(--ink2);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.p-dot{fill:var(--ink);stroke:#fff;stroke-width:2}
+.p-dot.bad{fill:var(--red);animation:blink .9s ease both}
+@keyframes blink{0%,60%{opacity:1}100%{opacity:0}}
+.p-ghost{fill:var(--ink2);opacity:.28;pointer-events:none}
+.p-sym{stroke:var(--red);stroke-width:1.5;stroke-dasharray:6 5}
+.p-mark{fill:var(--red);stroke:#fff;stroke-width:2.5}
+.p-txt{font-family:var(--math);font-weight:700;fill:var(--red);paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round}
+.plotcard{padding:10px}
+.minis{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:12px;margin-top:.8em}
+.mini{margin:0;text-align:center}
+.mini .plot{border:1px solid var(--line);border-radius:8px;max-width:170px}
+.mini figcaption{font-size:.9rem;margin-top:.3em;line-height:1.3}
+.mini figcaption b{font-family:var(--math);color:var(--ink);font-size:1.08em}
+
+/* ---------- задания ---------- */
+.steps{list-style:none;margin:1em 0 0;padding:0;counter-reset:st;display:grid;gap:10px}
+.step{counter-increment:st;position:relative;padding:12px 14px 14px 52px;background:#fff;border:1px solid var(--line);border-radius:10px}
+.step::before{content:counter(st);position:absolute;left:12px;top:11px;width:1.9em;height:1.9em;border-radius:50%;display:grid;place-items:center;font-weight:700;background:#EEF1FA;color:var(--ink);font-size:.9rem}
+.step.cur{border-color:var(--ink);box-shadow:0 0 0 2px rgba(28,46,122,.12)}
+.step.cur::before{background:var(--ink);color:#fff}
+.step.done::before{content:"✓";background:var(--green);color:#fff}
+.step.locked{opacity:.5}
+.step.locked .btn{pointer-events:none}
+.step h3{margin-bottom:.25em}
+.step>*+*{margin-top:.55em}
+.tblwrap{overflow-x:auto}
+table.vals{border-collapse:collapse;font-family:var(--math);font-size:1.08rem;width:100%;table-layout:fixed}
+table.vals th,table.vals td{border:1.5px solid #9AA5C6;padding:.3em .15em;text-align:center}
+table.vals th{background:#EEF1FA;color:var(--ink);width:2.2em}
+table.vals td .in{width:100%;border:0;border-radius:4px;padding:.25em 0;background:#F6F8FD}
+.in{width:4.6em;font-family:var(--math);font-size:1.1rem;text-align:center;border:1.5px solid #8F9BC0;border-radius:7px;padding:.32em .2em;background:#fff}
+.in.ok,table.vals td .in.ok{background:var(--green-bg);box-shadow:inset 0 0 0 2px var(--green);color:#0d5733}
+.in.bad,table.vals td .in.bad{background:var(--red-bg);box-shadow:inset 0 0 0 2px var(--red);text-decoration:underline wavy var(--red)}
+.field{display:inline-flex;align-items:center;gap:.4em;font-family:var(--math);font-size:1.2rem;color:var(--ink)}
+.q{margin-top:1em}
+.q>.qt{font-weight:700;margin-bottom:.4em;display:flex;gap:.5em;align-items:baseline}
+.q>.qt .n{display:inline-grid;place-items:center;flex:none;width:1.6em;height:1.6em;border-radius:50%;background:#EEF1FA;color:var(--ink);font-size:.85rem}
+.seg{display:inline-flex;flex-wrap:wrap;gap:8px}
+.seg-b{border:1.5px solid var(--ink);background:#fff;color:var(--ink);border-radius:8px;padding:.45em 1em;font-family:var(--math);font-size:1.15rem;min-width:4.6em}
+.seg-b.txt{font-family:var(--sans);font-size:1rem;font-weight:700}
+.seg-b:hover{background:#EEF1FA}
+.seg-b[aria-pressed="true"]{background:var(--ink);color:#fff}
+.seg.ok .seg-b[aria-pressed="true"]{background:var(--green);border-color:var(--green)}
+.seg.ok .seg-b[aria-pressed="true"]::before{content:"✓ "}
+.seg.bad .seg-b[aria-pressed="true"]{background:var(--red);border-color:var(--red)}
+.seg.bad .seg-b[aria-pressed="true"]::before{content:"✗ "}
+.seg.lock .seg-b{pointer-events:none}
+.seg.lock .seg-b[aria-pressed="false"]{opacity:.4}
+.fb{margin-top:.9em}
+.fb:empty{display:none}
+.step .fb{margin-top:.6em}
+.fb.ok,.fb.bad,.fb.info,.fb.hint{display:flex;gap:.7em;align-items:flex-start;padding:.7em .9em;border-radius:10px;border:1.5px solid;font-size:.97rem}
+.fb .ic{flex:none;width:1.5em;height:1.5em;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:.9rem;margin-top:.05em}
+.fb.ok{background:var(--green-bg);border-color:var(--green)} .fb.ok .ic{background:var(--green)}
+.fb.bad{background:var(--red-bg);border-color:var(--red)} .fb.bad .ic{background:var(--red)}
+.fb.info{background:#EEF1FA;border-color:#9AA5C6} .fb.info .ic{background:var(--ink)}
+.fb.hint{background:var(--amber-bg);border-color:#D9B44A} .fb.hint .ic{background:var(--amber)}
+.fb p+p{margin-top:.35em}
+.sol{font-family:var(--math);font-size:1.12rem;line-height:1.9}
+.sol .w{font-family:var(--sans);font-size:.9em}
+.sol>div{white-space:nowrap;overflow-x:auto}
+.actions{margin-top:1.1em}
+
+/* ---------- титул ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(16px,3vw,40px);align-items:center}
+.hero h1{font-size:clamp(2.3rem,6.4vw,4.6rem);letter-spacing:-.01em}
+.hero .formula{font-size:clamp(1.6rem,3.4vw,2.4rem);margin-top:.5em}
+.hero .plot{max-width:420px;border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 40px -24px rgba(28,46,122,.6)}
+@media (max-width:860px){.hero{grid-template-columns:1fr}.hero .art{order:-1}.hero .plot{max-width:240px}}
+.blocks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:clamp(18px,3vw,34px)}
+@media (max-width:980px){.blocks{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.blocks{grid-template-columns:1fr}}
+.bcard{text-align:left;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px 14px 12px;display:flex;flex-direction:column;gap:.35em;transition:border-color .15s,transform .15s}
+.bcard:hover{border-color:var(--ink);transform:translateY(-2px)}
+.bcard .bn{font-size:.75rem;letter-spacing:.09em;text-transform:uppercase;color:var(--red);font-weight:700}
+.bcard .bt{font-family:var(--serif);font-weight:700;color:var(--ink);font-size:1.12rem;line-height:1.2}
+.bcard .bd{font-size:.88rem;color:var(--muted);flex:1}
+.meter{height:6px;border-radius:3px;background:#E6EAF5;overflow:hidden;margin-top:.4em}
+.meter>span{display:block;height:100%;background:var(--green);border-radius:3px}
+.bcard .bp{font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* ---------- песочница ---------- */
+.sliders{display:grid;gap:.5em;margin-top:.9em}
+.sl{display:grid;grid-template-columns:5.2em 1fr;align-items:center;gap:.6em;font-family:var(--math);font-size:1.15rem;color:var(--ink)}
+.sl input{width:100%;accent-color:var(--ink);height:1.6em}
+.chips{display:grid;gap:6px;margin-top:.9em}
+.chip{background:#fff;border:1px solid var(--line);border-left:4px solid var(--ink2);border-radius:0 8px 8px 0;padding:.4em .7em;font-size:.93rem}
+.chip.warn{border-left-color:var(--red);background:var(--red-bg)}
+.legend{display:grid;gap:.3em;margin-top:.7em}
+.legend b{font-family:var(--math);font-style:italic;color:var(--ink);font-size:1.15em;display:inline-block;min-width:1.2em}
+
+/* ---------- итоги ---------- */
+.res{display:grid;gap:10px;margin-top:1.2em}
+.resrow{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) auto;gap:8px 18px;align-items:center}
+@media (max-width:700px){.resrow{grid-template-columns:1fr}}
+.resrow .rt{font-family:var(--serif);font-weight:700;color:var(--ink)}
+.resrow .rs{font-size:.86rem;color:var(--muted)}
+.resrow .meter{height:10px;border-radius:5px;margin:0}
+.total{font-family:var(--serif);font-size:clamp(2.4rem,6vw,4rem);color:var(--ink);line-height:1;font-variant-numeric:tabular-nums}
+.total small{font-size:.45em;color:var(--muted);font-family:var(--sans)}
+.trainer-head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;margin-bottom:.4em}
+.badge{display:inline-block;background:var(--hl);color:var(--ink);border-radius:999px;padding:.15em .8em;font-weight:700;font-size:.88rem;font-variant-numeric:tabular-nums}
+
+@media (max-width:640px){
+  .tab .lbl,.tab .cnt{display:none}
+  .tab{padding:.28em .32em}
+  .tab[aria-current="true"] .lbl{display:inline}
+  .tab[aria-current="true"]{padding-right:.8em}
+  .bar .btn span.t{display:none}
+  .brand{display:none}
+  .step{padding-left:14px;padding-top:44px}
+  .formula{white-space:normal}
+  .sol>div{white-space:normal}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+@media print{.top,.bar{display:none}body{height:auto}.stage{overflow:visible}}
+</style>
+</head>
+<body>
+<header class="top">
+  <button class="brand" id="brand" aria-label="На первый слайд">ax² + bx + c</button>
+  <nav class="tabs" id="tabs" aria-label="Разделы урока"></nav>
+  <button class="icon-btn" id="fs" title="Во весь экран" aria-label="Во весь экран">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 6V2h4M12 2h4v4M16 12v4h-4M6 16H2v-4"/></svg>
+  </button>
+</header>
+<main class="stage" id="stage" tabindex="-1"></main>
+<footer class="bar">
+  <button class="btn ghost" id="prev" aria-label="Предыдущий слайд">← <span class="t">Назад</span></button>
+  <div class="mid"><div class="dots" id="dots"></div><div class="pos" id="pos"></div></div>
+  <button class="btn" id="next" aria-label="Следующий слайд"><span class="t">Далее</span> →</button>
+</footer>
+<noscript><p style="padding:20px">Для работы интерактивного урока включите JavaScript.</p></noscript>
+
+<script>
+'use strict';
+/* =====================================================================
+   Квадратный трёхчлен — интерактивный урок. Один файл, без зависимостей.
+   ===================================================================== */
+const NS = 'http://www.w3.org/2000/svg';
+const MINUS = '\u2212';
+const REDUCED = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- маленькие помощники ---------- */
+function h(tag, attrs, ...kids) {
+  const e = document.createElement(tag);
+  if (attrs) for (const k in attrs) {
+    const v = attrs[k];
+    if (v == null || v === false) continue;
+    if (k === 'class') e.className = v;
+    else if (k === 'html') e.innerHTML = v;
+    else if (k.slice(0, 2) === 'on') e.addEventListener(k.slice(2), v);
+    else e.setAttribute(k, v === true ? '' : v);
+  }
+  for (const k of kids.flat(3)) { if (k == null || k === false) continue; e.append(k.nodeType ? k : document.createTextNode(k)); }
+  return e;
+}
+function S(tag, attrs, ...kids) {
+  const e = document.createElementNS(NS, tag);
+  if (attrs) for (const k in attrs) if (attrs[k] != null) e.setAttribute(k, attrs[k]);
+  for (const k of kids.flat()) if (k) e.append(k);
+  return e;
+}
+const R = (lo, hi) => lo + Math.floor(Math.random() * (hi - lo + 1));
+const pick = a => a[R(0, a.length - 1)];
+
+/* число → строка по-русски: запятая и настоящий минус */
+function fmt(v) {
+  v = Math.round(v * 1000) / 1000;
+  if (v === 0) v = 0;
+  return String(v).replace('.', ',').replace('-', MINUS);
+}
+const par = v => (v < 0 ? '(' + fmt(v) + ')' : fmt(v));
+function gcd(a, b) { a = Math.abs(a); b = Math.abs(b); while (b) { [a, b] = [b, a % b]; } return a || 1; }
+/* p/q → «0,5» или «−1/3» */
+function fracStr(p, q) {
+  const sign = (p < 0) !== (q < 0) && p !== 0 ? -1 : 1;
+  p = Math.abs(p); q = Math.abs(q);
+  const g = gcd(p, q); p /= g; q /= g;
+  if (q === 1) return fmt(sign * p);
+  let t = q; while (t % 2 === 0) t /= 2; while (t % 5 === 0) t /= 5;
+  if (t === 1) return fmt(sign * p / q);
+  return (sign < 0 ? MINUS : '') + p + '/' + q;
+}
+/* ввод ученика → число. Понимает «−3», «0,5», «1/2» */
+function parseNum(s) {
+  s = String(s).trim().replace(/[\u2212\u2013\u2014]/g, '-').replace(/,/g, '.').replace(/\s+/g, '');
+  if (s === '') return NaN;
+  let m = /^([-+]?\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)$/.exec(s);
+  if (m) return +m[2] === 0 ? NaN : +m[1] / +m[2];
+  if (/^[-+]?(\d+(\.\d*)?|\.\d+)$/.test(s)) return parseFloat(s);
+  return NaN;
+}
+function same(u, v) {
+  if (!isFinite(u)) return false;
+  const exact = Math.abs(v * 1000 - Math.round(v * 1000)) < 1e-9;
+  return Math.abs(u - v) < (exact ? 1e-9 : 0.006);
+}
+
+const X = '<i>x</i>', X2 = '<i>x</i><sup>2</sup>';
+/* трёхчлен в виде HTML; order задаёт порядок слагаемых */
+function polyHTML(a, b, c, order) {
+  const t = { a: [a, X2], b: [b, X], c: [c, ''] };
+  let out = '', first = true;
+  for (const k of (order || 'abc')) {
+    const v = t[k][0], sym = t[k][1];
+    if (v === 0) continue;
+    const abs = Math.abs(v), num = (abs === 1 && sym) ? '' : fmt(abs);
+    if (first) { out += (v < 0 ? MINUS : '') + num + sym; first = false; }
+    else out += ' ' + (v < 0 ? MINUS : '+') + ' ' + num + sym;
+  }
+  return out || '0';
+}
+const funcHTML = (a, b, c, o) => '<i>y</i> = ' + polyHTML(a, b, c, o);
+const frac = (p, q) => '<span class="frac"><span>' + p + '</span><span>' + q + '</span></span>';
+function dLine(a, b, c) {
+  const D = b * b - 4 * a * c, k = -4 * a * c;
+  return '<i>D</i> = <i>b</i><sup>2</sup> ' + MINUS + ' 4<i>ac</i> = ' + par(b) + '<sup>2</sup> ' + MINUS + ' 4·' + par(a) + '·' + par(c) +
+    ' = ' + fmt(b * b) + ' ' + (k > 0 ? '+' : MINUS) + ' ' + fmt(Math.abs(k)) + ' = ' + fmt(D);
+}
+
+/* ---------- координатная плоскость (SVG) ---------- */
+let plotUid = 0;
+function Plot(o) {
+  const u = o.unit || 40, pad = o.pad == null ? 16 : o.pad, fs = o.fs || 13;
+  const xmin = o.xmin, xmax = o.xmax, ymin = o.ymin, ymax = o.ymax;
+  const W = (xmax - xmin) * u, H = (ymax - ymin) * u;
+  const sx = x => (x - xmin) * u, sy = y => (ymax - y) * u;
+  const id = 'clip' + (++plotUid);
+  const svg = S('svg', { viewBox: (-pad) + ' ' + (-pad) + ' ' + (W + 2 * pad) + ' ' + (H + 2 * pad), class: 'plot' });
+  if (o.label) { svg.setAttribute('role', 'img'); svg.setAttribute('aria-label', o.label); } else svg.setAttribute('aria-hidden', 'true');
+  svg.append(S('clipPath', { id }, S('rect', { x: 0, y: 0, width: W, height: H })));
+  svg.append(S('rect', { x: 0, y: 0, width: W, height: H, class: 'p-bg' }));
+  const grid = S('g', { class: 'p-grid' });
+  for (let x = Math.ceil(xmin); x <= xmax; x++) grid.append(S('line', { x1: sx(x), y1: 0, x2: sx(x), y2: H }));
+  for (let y = Math.ceil(ymin); y <= ymax; y++) grid.append(S('line', { x1: 0, y1: sy(y), x2: W, y2: sy(y) }));
+  svg.append(grid);
+  const X0 = sx(0), Y0 = sy(0), xe = W + pad - 3, ye = -pad + 3, ar = Math.min(8, u * .45);
+  let d = 'M0 ' + Y0 + 'H' + xe + 'M' + (xe - ar) + ' ' + (Y0 - ar / 2) + 'L' + xe + ' ' + Y0 + 'L' + (xe - ar) + ' ' + (Y0 + ar / 2) +
+          'M' + X0 + ' ' + H + 'V' + ye + 'M' + (X0 - ar / 2) + ' ' + (ye + ar) + 'L' + X0 + ' ' + ye + 'L' + (X0 + ar / 2) + ' ' + (ye + ar);
+  const lab = S('g', { class: 'p-lab', 'font-size': fs });
+  const T = (x, y, s, anchor, cls) => { const t = S('text', { x, y, 'text-anchor': anchor || 'middle', class: cls }); t.textContent = s; return t; };
+  if (o.ticks !== 'none') {
+    lab.append(T(W - 3, Y0 - 7, 'x', 'end', 'it'), T(X0 + 8, fs * .8, 'y', 'start', 'it'), T(X0 - 6, Y0 + fs + 6, '0', 'end'));
+    const only1 = o.ticks === 'one';
+    for (let x = Math.ceil(xmin) + 1; x < xmax; x++) if (x !== 0 && (!only1 || x === 1)) {
+      lab.append(T(sx(x), Y0 + fs + 6, fmt(x)));
+      if (only1) d += 'M' + sx(x) + ' ' + (Y0 - 4) + 'v8';
+    }
+    for (let y = Math.ceil(ymin) + 1; y < ymax; y++) if (y !== 0 && (!only1 || y === 1)) {
+      lab.append(T(X0 - 8, sy(y) + fs * .34, fmt(y), 'end'));
+      if (only1) d += 'M' + (X0 - 4) + ' ' + sy(y) + 'h8';
+    }
+  }
+  svg.append(S('g', { class: 'p-axes' }, S('path', { d })), lab);
+  const layer = S('g', { 'clip-path': 'url(#' + id + ')' }), over = S('g');
+  svg.append(layer, over);
+  const P = {
+    svg, sx, sy, u, W, H, xmin, xmax, ymin, ymax, layer, over,
+    pathD(a, b, c) {
+      const pts = [];
+      for (let i = 0, n = Math.round((xmax - xmin) / 0.05); i <= n; i++) {
+        const x = xmin + i * 0.05, y = a * x * x + b * x + c;
+        if (y < ymin - 3 || y > ymax + 3) continue;
+        pts.push(sx(x).toFixed(1) + ' ' + sy(y).toFixed(1));
+      }
+      return pts.length ? 'M' + pts.join('L') : 'M0 0';
+    },
+    curve(a, b, c, cls) { const p = S('path', { d: P.pathD(a, b, c), class: cls || 'p-curve' }); layer.append(p); return p; },
+    dot(x, y, cls, r) { const e = S('circle', { cx: sx(x), cy: sy(y), r: r || 6, class: cls || 'p-dot' }); over.append(e); return e; },
+    line(x1, y1, x2, y2, cls) { const e = S('line', { x1: sx(x1), y1: sy(y1), x2: sx(x2), y2: sy(y2), class: cls }); layer.append(e); return e; },
+    text(x, y, s, dx, dy, size, anchor) { const t = S('text', { x: sx(x) + (dx || 0), y: sy(y) + (dy || 0), class: 'p-txt', 'font-size': size || 15, 'text-anchor': anchor || 'start' }); t.textContent = s; over.append(t); return t; },
+    toMath(e) {
+      const m = svg.getScreenCTM(); if (!m) return null;
+      const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
+      const p = pt.matrixTransform(m.inverse());
+      return { x: p.x / u + xmin, y: ymax - p.y / u };
+    }
+  };
+  return P;
+}
+/* анимация «рисуем линию ручкой» */
+function drawAnim(p, ms) {
+  if (REDUCED || !p.getTotalLength) return;
+  let L = 0; try { L = p.getTotalLength(); } catch (e) { return; }
+  if (!L) return;
+  p.style.strokeDasharray = L; p.style.strokeDashoffset = L;
+  p.getBoundingClientRect();
+  p.style.transition = 'stroke-dashoffset ' + (ms || 1200) + 'ms ease-in-out';
+  p.style.strokeDashoffset = 0;
+  setTimeout(() => { p.style.strokeDasharray = ''; p.style.strokeDashoffset = ''; p.style.transition = ''; }, (ms || 1200) + 80);
+}
+/* маленькая картинка-иллюстрация для теории */
+function mini(a, b, c, caption, opt) {
+  opt = opt || {};
+  const P = Plot({ xmin: -5, xmax: 5, ymin: -5, ymax: 5, unit: 16, pad: 6, ticks: 'none' });
+  P.curve(a, b, c);
+  if (opt.c) P.dot(0, c, 'p-mark', 6);
+  if (opt.roots) {
+    const D = b * b - 4 * a * c;
+    if (D >= 0) [(-b - Math.sqrt(D)) / (2 * a), (-b + Math.sqrt(D)) / (2 * a)].forEach(x => P.dot(x, 0, 'p-mark', 6));
+  }
+  return h('figure', { class: 'mini' }, P.svg, h('figcaption', { html: caption }));
+}
+
+/* ---------- обратная связь, поля, переключатели ---------- */
+function FB() {
+  const e = h('div', { class: 'fb', role: 'status', 'aria-live': 'polite' });
+  const ic = { ok: '✓', bad: '✗', info: 'i', hint: '!' };
+  e.set = (type, html) => { e.className = 'fb ' + type; e.innerHTML = '<b class="ic" aria-hidden="true">' + ic[type] + '</b><div>' + html + '</div>'; };
+  e.clear = () => { e.className = 'fb'; e.innerHTML = ''; };
+  return e;
+}
+function numIn(label) {
+  const i = h('input', { class: 'in', type: 'text', inputmode: 'text', autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false', 'aria-label': label });
+  i.addEventListener('input', () => i.classList.remove('ok', 'bad'));
+  return i;
+}
+function setMark(input, good) { input.classList.toggle('ok', good); input.classList.toggle('bad', !good); return good; }
+function Seg(label, opts, txt) {
+  const root = h('div', { class: 'seg', role: 'group', 'aria-label': label });
+  const api = { el: root, value: null, onchange: null };
+  const btns = opts.map(o => {
+    const b = h('button', { type: 'button', class: 'seg-b' + (txt ? ' txt' : ''), 'aria-pressed': 'false', html: o.l });
+    b.addEventListener('click', () => api.set(o.v, true));
+    return b;
+  });
+  api.set = (v, fire) => {
+    api.value = v; root.classList.remove('ok', 'bad');
+    btns.forEach((b, i) => b.setAttribute('aria-pressed', opts[i].v === v ? 'true' : 'false'));
+    if (fire && api.onchange) api.onchange(v);
+  };
+  api.mark = good => { root.classList.toggle('ok', good); root.classList.toggle('bad', !good); return good; };
+  api.lock = () => root.classList.add('lock');
+  root.append(...btns);
+  return api;
+}
+function field(labelHTML, input) { return h('label', { class: 'field' }, h('span', { html: labelHTML }), input); }
+function qBlock(n, titleHTML, ...body) {
+  return h('div', { class: 'q' }, h('div', { class: 'qt' }, h('span', { class: 'n' }, String(n)), h('span', { html: titleHTML })), body);
+}
+function onEnter(root, fn) {
+  root.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.tagName === 'INPUT') { e.preventDefault(); fn(); } });
+}
+
+/* =====================================================================
+   БЛОК 1. График по точкам
+   ===================================================================== */
+function taskPlot(d, ctx) {
+  const a = d.a, b = d.b, c = d.c, f = x => a * x * x + b * x + c;
+  const x0 = -b / (2 * a), y0 = f(x0), half = Math.abs(a) === 1 ? 3 : 2;
+  const xs = [], ys = [];
+  for (let i = -half; i <= half; i++) { xs.push(x0 + i); ys.push(f(x0 + i)); }
+  const P = Plot({ xmin: Math.min(0, ...xs) - 1, xmax: Math.max(0, ...xs) + 1, ymin: Math.min(0, ...ys) - 1, ymax: Math.max(0, ...ys) + 1,
+    unit: 40, fs: 15, ticks: 'all', label: 'Координатная плоскость. Отмечай точки нажатием на узлы сетки.' });
+  P.svg.style.maxWidth = Math.round((P.W + 32) * 1.2) + 'px';
+  P.svg.classList.add('tall');
+  let stage = 1, errors = 0, finished = false;
+  const placed = new Set();
+  const fbT = FB(), fb = FB();
+  const inputs = xs.map(x => numIn('Значение y при x = ' + fmt(x)));
+  const table = h('table', { class: 'vals' }, h('tbody', null,
+    h('tr', null, h('th', { html: X }), xs.map(x => h('td', null, fmt(x)))),
+    h('tr', null, h('th', { html: '<i>y</i>' }), inputs.map(i => h('td', null, i)))));
+  const counter = h('span', { class: 'badge' }, '0 из ' + xs.length);
+  const btnCheck = h('button', { class: 'btn', type: 'button', onclick: checkTable }, 'Проверить таблицу');
+  const btnDraw = h('button', { class: 'btn', type: 'button', onclick: () => { if (stage === 3) { finish(true); ctx.solved(errors === 0); } } }, 'Провести параболу');
+  const st1 = h('li', { class: 'step' }, h('h3', null, 'Заполни таблицу значений'),
+    h('p', { class: 'sub', html: 'Подставь каждое значение ' + X + ' в формулу и запиши, чему равен <i>y</i>.' }),
+    h('div', { class: 'tblwrap' }, table), btnCheck, fbT);
+  const st2 = h('li', { class: 'step' }, h('h3', null, 'Отметь точки на координатной плоскости'),
+    h('p', { class: 'sub' }, 'Нажимай на узлы сетки — по одной точке на каждый столбец таблицы. Отмечено: ', counter));
+  const st3 = h('li', { class: 'step' }, h('h3', null, 'Соедини точки плавной линией'), btnDraw);
+  const steps = [st1, st2, st3];
+  function setStage(n) {
+    stage = n;
+    steps.forEach((s, i) => { s.className = 'step ' + (i + 1 < n ? 'done' : i + 1 === n ? 'cur' : 'locked'); });
+    P.svg.classList.toggle('active', n === 2);
+    btnCheck.hidden = n > 1; btnDraw.hidden = n > 3;
+  }
+  function checkTable() {
+    if (stage !== 1) return;
+    let good = 0, empty = 0;
+    inputs.forEach((inp, i) => {
+      if (inp.value.trim() === '') { empty++; inp.classList.remove('ok'); inp.classList.add('bad'); return; }
+      if (setMark(inp, same(parseNum(inp.value), ys[i]))) good++;
+    });
+    if (good === xs.length) {
+      inputs.forEach(i => i.readOnly = true);
+      setStage(2);
+      fbT.set('ok', 'Таблица заполнена верно.');
+      fb.set('info', 'Теперь отметь на плоскости ' + xs.length + ' точек из таблицы: нажимай на узлы сетки.');
+      if (window.matchMedia && matchMedia('(max-width:860px)').matches) try { P.svg.scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'center' }); } catch (e) {}
+    } else {
+      errors++;
+      const firstBad = inputs.findIndex(i => i.classList.contains('bad'));
+      const xb = xs[firstBad];
+      fbT.set('bad', (empty ? 'Заполни все клетки таблицы. ' : 'Красным подчёркнуты неверные значения. ') +
+        'Например, при ' + X + ' = ' + fmt(xb) + ' подставляем: <span class="m">' + substitution(xb) + '</span> = …');
+    }
+  }
+  function substitution(x) {
+    const xp = par(x), parts = [];
+    parts.push((a === 1 ? '' : a === -1 ? MINUS : fmt(a) + '·') + xp + '<sup>2</sup>');
+    if (b !== 0) parts.push((b < 0 ? MINUS : '+') + ' ' + (Math.abs(b) === 1 ? '' : fmt(Math.abs(b)) + '·') + xp);
+    if (c !== 0) parts.push((c < 0 ? MINUS : '+') + ' ' + fmt(Math.abs(c)));
+    return parts.join(' ');
+  }
+  const ghost = S('circle', { r: 7, class: 'p-ghost', visibility: 'hidden' });
+  P.over.append(ghost);
+  function lattice(e) {
+    const m = P.toMath(e); if (!m) return null;
+    const gx = Math.round(m.x), gy = Math.round(m.y);
+    if (gx <= P.xmin - 1 || gx >= P.xmax + 1 || gy <= P.ymin - 1 || gy >= P.ymax + 1) return null;
+    if (gx < P.xmin || gx > P.xmax || gy < P.ymin || gy > P.ymax) return null;
+    return { x: gx, y: gy };
+  }
+  P.svg.addEventListener('pointermove', e => {
+    if (stage !== 2 || e.pointerType === 'touch') return;
+    const g = lattice(e);
+    if (!g) { ghost.setAttribute('visibility', 'hidden'); return; }
+    ghost.setAttribute('cx', P.sx(g.x)); ghost.setAttribute('cy', P.sy(g.y)); ghost.setAttribute('visibility', 'visible');
+  });
+  P.svg.addEventListener('pointerleave', () => ghost.setAttribute('visibility', 'hidden'));
+  P.svg.addEventListener('click', e => {
+    if (stage === 1 && !finished) { fb.set('info', 'Сначала заполни и проверь таблицу значений — точки берутся из неё.'); return; }
+    if (stage !== 2) return;
+    const g = lattice(e); if (!g) return;
+    const i = xs.indexOf(g.x);
+    if (i >= 0 && ys[i] === g.y) {
+      const key = g.x + ';' + g.y;
+      if (placed.has(key)) return;
+      placed.add(key); P.dot(g.x, g.y);
+      counter.textContent = placed.size + ' из ' + xs.length;
+      if (placed.size === xs.length) { ghost.setAttribute('visibility', 'hidden'); setStage(3); fb.set('ok', 'Все точки на месте. Осталось провести через них параболу.'); }
+      else fb.set('info', 'Точка (' + fmt(g.x) + '; ' + fmt(g.y) + ') отмечена верно.');
+    } else {
+      errors++;
+      const bad = P.dot(g.x, g.y, 'p-dot bad');
+      setTimeout(() => bad.remove(), 900);
+      fb.set('bad', 'Точки (' + fmt(g.x) + '; ' + fmt(g.y) + ') нет в таблице. Первое число — ' + X + ' (вправо-влево), второе — <i>y</i> (вверх-вниз).');
+    }
+  });
+  function finish(animate) {
+    if (finished) return; finished = true;
+    P.line(x0, P.ymin, x0, P.ymax, 'p-sym');
+    const curve = P.curve(a, b, c); if (animate) drawAnim(curve);
+    P.dot(x0, y0, 'p-mark', 7);
+    setStage(4);
+    fb.set('ok', '<p><b>Парабола построена.</b> Вершина — точка <span class="m nb">(' + fmt(x0) + '; ' + fmt(y0) + ')</span>, ось симметрии — прямая <span class="m nb">' + X + ' = ' + fmt(x0) +
+      '</span> (красный пунктир).</p><p>Ветви направлены ' + (a > 0 ? 'вверх, потому что <span class="m nb"><i>a</i> = ' + fmt(a) + ' &gt; 0</span>' : 'вниз, потому что <span class="m nb"><i>a</i> = ' + fmt(a) + ' &lt; 0</span>') + '.</p>');
+    btnShow.hidden = true;
+  }
+  function reveal(silent) {
+    inputs.forEach((inp, i) => { inp.value = fmt(ys[i]); inp.className = 'in ok'; inp.readOnly = true; });
+    xs.forEach((x, i) => { const key = x + ';' + ys[i]; if (!placed.has(key)) { placed.add(key); P.dot(x, ys[i]); } });
+    counter.textContent = xs.length + ' из ' + xs.length;
+    fbT.clear();
+    finish(!silent);
+  }
+  const btnShow = h('button', { class: 'linkbtn', type: 'button', onclick: () => { if (!finished) { reveal(false); ctx.hinted(); } } }, 'Показать решение');
+  setStage(1);
+  const root = h('div', null,
+    h('h2', null, 'Построй график функции'),
+    h('div', { class: 'split wide-left' },
+      h('div', null,
+        h('div', { class: 'formula', html: funcHTML(a, b, c) }),
+        h('ol', { class: 'steps' }, steps), h('div', { class: 'actions' }, btnShow)),
+      h('div', { class: 'sticky' }, h('div', { class: 'card plotcard' }, P.svg), fb)));
+  onEnter(root, checkTable);
+  if (ctx.restore) reveal(true);
+  return root;
+}
+function genPlot() {
+  for (;;) {
+    const a = pick([1, 1, 1, -1, -1, 2, -2]), x0 = R(-3, 3), y0 = R(-5, 5), half = Math.abs(a) === 1 ? 3 : 2;
+    const edge = y0 + a * half * half, lo = Math.min(0, y0, edge), hi = Math.max(0, y0, edge);
+    if (hi - lo > 12) continue;
+    return { a, b: -2 * a * x0, c: a * x0 * x0 + y0 };
+  }
+}
+
+/* =====================================================================
+   БЛОК 2. Знаки a и c по графику
+   ===================================================================== */
+function taskSigns(d, ctx) {
+  const a = d.a, b = d.b, c = d.c;
+  const P = Plot({ xmin: -7, xmax: 7, ymin: -7, ymax: 7, unit: 32, ticks: 'one', fs: 17, label: 'График квадратичной функции — парабола' });
+  P.svg.style.maxWidth = '520px';
+  P.curve(a, b, c);
+  let errors = 0, done = false;
+  const fb = FB();
+  const segA = Seg('Знак коэффициента a', [{ v: 1, l: '<i>a</i> &gt; 0' }, { v: -1, l: '<i>a</i> &lt; 0' }]);
+  const segC = Seg('Знак коэффициента c', [{ v: 1, l: '<i>c</i> &gt; 0' }, { v: 0, l: '<i>c</i> = 0' }, { v: -1, l: '<i>c</i> &lt; 0' }]);
+  const explainA = 'Ветви параболы направлены ' + (a > 0 ? 'вверх, значит <i>a</i> &gt; 0.' : 'вниз, значит <i>a</i> &lt; 0.');
+  const explainC = c === 0 ? 'Парабола проходит через начало координат (0; 0), значит <i>c</i> = 0.'
+    : 'Парабола пересекает ось <i>Oy</i> в точке (0; ' + fmt(c) + ') — ' + (c > 0 ? 'выше оси <i>Ox</i>, значит <i>c</i> &gt; 0.' : 'ниже оси <i>Ox</i>, значит <i>c</i> &lt; 0.');
+  function showAnswer(prefix) {
+    done = true;
+    segA.set(Math.sign(a)); segA.mark(true); segA.lock();
+    segC.set(Math.sign(c)); segC.mark(true); segC.lock();
+    P.dot(0, c, 'p-mark', 8);
+    P.text(0, c, '(0; ' + fmt(c) + ')', 13, (b < 0 || (b === 0 && a < 0)) ? -11 : 24, 19);
+    fb.set('ok', '<p>' + prefix + explainA + '</p><p>' + explainC + '</p><p class="sub">Это график функции <span class="m">' + funcHTML(a, b, c) + '</span>.</p>');
+    btnCheck.hidden = true; btnShow.hidden = true;
+  }
+  function check() {
+    if (done) return;
+    if (segA.value === null || segC.value === null) { fb.set('info', 'Выбери ответ в обеих строках: и для <i>a</i>, и для <i>c</i>.'); return; }
+    const ga = segA.mark(segA.value === Math.sign(a)), gc = segC.mark(segC.value === Math.sign(c));
+    if (ga && gc) { showAnswer('<b>Верно.</b> '); ctx.solved(errors === 0); return; }
+    errors++;
+    const tips = [];
+    if (!ga) tips.push('<b>Знак <i>a</i>:</b> посмотри, куда направлены ветви параболы — вверх или вниз.');
+    if (!gc) tips.push('<b>Знак <i>c</i>:</b> найди точку, в которой парабола пересекает вертикальную ось <i>Oy</i>. Она выше нуля, ниже или в самом нуле?');
+    fb.set('bad', '<p>' + tips.join('</p><p>') + '</p>');
+  }
+  const btnCheck = h('button', { class: 'btn', type: 'button', onclick: check }, 'Проверить');
+  const btnShow = h('button', { class: 'linkbtn', type: 'button', onclick: () => { if (!done) { showAnswer(''); ctx.hinted(); } } }, 'Показать ответ');
+  const root = h('div', null,
+    h('h2', { html: 'Определи знаки коэффициентов <i>a</i> и <i>c</i>' }),
+    h('div', { class: 'split' },
+      h('div', { class: 'card plotcard' }, P.svg),
+      h('div', null,
+        h('p', { class: 'lead', style: 'margin-top:0', html: 'На рисунке — график функции <span class="m"><i>y</i> = <i>ax</i><sup>2</sup> + <i>bx</i> + <i>c</i></span>.' }),
+        qBlock(1, 'Какой знак у старшего коэффициента <i>a</i>?', segA.el),
+        qBlock(2, 'Какой знак у свободного члена <i>c</i>?', segC.el),
+        h('div', { class: 'row actions' }, btnCheck, btnShow), fb)));
+  if (ctx.restore) showAnswer('');
+  return root;
+}
+function genSigns() {
+  for (;;) {
+    const a = pick([1, -1, 1, -1, 0.5, -0.5, 2, -2]), x0 = R(-4, 4), c = pick([0, R(-5, 5), R(-5, 5), R(-5, 5)]);
+    const y0 = c - a * x0 * x0;
+    if (Math.abs(y0) > 6) continue;
+    return { a, b: -2 * a * x0, c };
+  }
+}
+
+/* =====================================================================
+   БЛОК 3. Коэффициенты и дискриминант
+   ===================================================================== */
+function taskCoef(d, ctx) {
+  const a = d.a, b = d.b, c = d.c, D = b * b - 4 * a * c;
+  let errors = 0, done = false;
+  const fb = FB();
+  const iA = numIn('Коэффициент a'), iB = numIn('Коэффициент b'), iC = numIn('Коэффициент c'), iD = numIn('Дискриминант D');
+  iD.style.width = '6em';
+  const verdict = D > 0 ? '<span class="m"><i>D</i> &gt; 0</span> — у трёхчлена <b>два корня</b>, парабола пересекает ось <i>Ox</i> в двух точках.'
+    : D === 0 ? '<span class="m"><i>D</i> = 0</span> — у трёхчлена <b>один корень</b>, парабола касается оси <i>Ox</i>.'
+    : '<span class="m"><i>D</i> &lt; 0</span> — у трёхчлена <b>нет корней</b>, парабола не пересекает ось <i>Ox</i>.';
+  function showAnswer(prefix) {
+    done = true;
+    [[iA, a], [iB, b], [iC, c], [iD, D]].forEach(p => { p[0].value = fmt(p[1]); p[0].className = 'in ok'; p[0].readOnly = true; });
+    fb.set('ok', '<p>' + prefix + '</p><div class="sol"><div><i>a</i> = ' + fmt(a) + ', <i>b</i> = ' + fmt(b) + ', <i>c</i> = ' + fmt(c) + '</div><div>' + dLine(a, b, c) + '</div></div><p>' + verdict + '</p>');
+    btnCheck.hidden = true; btnShow.hidden = true;
+  }
+  function check() {
+    if (done) return;
+    const flds = [iA, iB, iC, iD];
+    if (flds.some(i => i.value.trim() === '')) { flds.forEach(i => { if (i.value.trim() === '') i.classList.add('bad'); }); fb.set('info', 'Заполни все четыре поля: <i>a</i>, <i>b</i>, <i>c</i> и <i>D</i>.'); return; }
+    const va = parseNum(iA.value), vb = parseNum(iB.value), vc = parseNum(iC.value), vd = parseNum(iD.value);
+    const ga = setMark(iA, same(va, a)), gb = setMark(iB, same(vb, b)), gc = setMark(iC, same(vc, c)), gd = setMark(iD, same(vd, D));
+    if (ga && gb && gc && gd) { showAnswer('<b>Верно.</b>'); ctx.solved(errors === 0); return; }
+    errors++;
+    const tips = [];
+    if (!ga) tips.push(Math.abs(a) === 1 ? '<b><i>a</i></b> — число перед ' + X2 + '. Если числа нет, то коэффициент равен 1, а если стоит только минус — то ' + MINUS + '1.'
+      : '<b><i>a</i></b> — это число перед ' + X2 + ', где бы это слагаемое ни стояло. Знак входит в коэффициент.');
+    if (!gb) tips.push(b === 0 ? 'Слагаемого с ' + X + ' в записи нет — значит, <b><i>b</i> = 0</b>.'
+      : same(Math.abs(vb), Math.abs(b)) ? 'У <b><i>b</i></b> неверный знак: знак перед слагаемым входит в коэффициент.'
+      : '<b><i>b</i></b> — это число перед ' + X + ' (в первой степени)' + (Math.abs(b) === 1 ? '. Если числа нет, коэффициент равен 1 или ' + MINUS + '1.' : '.'));
+    if (!gc) tips.push(c === 0 ? 'Слагаемого без ' + X + ' в записи нет — значит, <b><i>c</i> = 0</b>.'
+      : same(Math.abs(vc), Math.abs(c)) ? 'У <b><i>c</i></b> неверный знак: знак перед слагаемым входит в коэффициент.'
+      : '<b><i>c</i></b> — свободный член, слагаемое без ' + X + '.');
+    if (!gd) tips.push(ga && gb && gc
+      ? 'Коэффициенты найдены верно, а дискриминант — нет. Подставь аккуратно: <span class="m"><i>D</i> = ' + par(b) + '<sup>2</sup> ' + MINUS + ' 4·' + par(a) + '·' + par(c) + '</span>.' + (a * c < 0 ? ' Обрати внимание: минус на минус даёт плюс.' : '')
+      : 'Дискриминант пересчитай после того, как исправишь коэффициенты: <span class="m"><i>D</i> = <i>b</i><sup>2</sup> ' + MINUS + ' 4<i>ac</i></span>.');
+    fb.set('bad', '<p>' + tips.join('</p><p>') + '</p>');
+  }
+  const btnCheck = h('button', { class: 'btn', type: 'button', onclick: check }, 'Проверить');
+  const btnShow = h('button', { class: 'linkbtn', type: 'button', onclick: () => { if (!done) { showAnswer('Разбор решения:'); ctx.hinted(); } } }, 'Показать решение');
+  const root = h('div', null,
+    h('h2', null, 'Выпиши коэффициенты и вычисли дискриминант'),
+    h('div', { class: 'card', style: 'margin-top:1.1em;max-width:46em' },
+      h('div', { class: 'formula', style: 'margin-top:0', html: funcHTML(a, b, c, d.order) }),
+      qBlock(1, 'Коэффициенты', h('div', { class: 'row' }, field('<i>a</i> =', iA), field('<i>b</i> =', iB), field('<i>c</i> =', iC))),
+      qBlock(2, 'Дискриминант', h('div', { class: 'row' }, field('<i>D</i> = <i>b</i><sup>2</sup> ' + MINUS + ' 4<i>ac</i> =', iD))),
+      h('div', { class: 'row actions' }, btnCheck, btnShow), fb));
+  onEnter(root, check);
+  if (ctx.restore) showAnswer('Задание уже разобрано.');
+  return root;
+}
+function genCoef() {
+  for (;;) {
+    const a = pick([1, -1, 1, -1, 2, -2, 3, -3, 4, 5]), b = pick([0, R(-9, 9), R(-9, 9), R(-9, 9)]), c = pick([0, R(-9, 9), R(-9, 9), R(-9, 9)]);
+    if (b === 0 && c === 0) continue;
+    return { a, b, c, order: pick(['abc', 'abc', 'abc', 'abc', 'cba', 'bac', 'acb', 'cab']) };
+  }
+}
+
+/* =====================================================================
+   БЛОК 4. Корни по формуле
+   ===================================================================== */
+function rootsOf(a, b, c) {
+  const D = b * b - 4 * a * c;
+  if (D < 0) return { D, n: 0, r: [], s: [] };
+  if (D === 0) return { D, n: 1, r: [-b / (2 * a)], s: [fracStr(-b, 2 * a)] };
+  const q = Math.sqrt(D), list = [[-b - q, 2 * a], [-b + q, 2 * a]].map(p => ({ v: p[0] / p[1], s: fracStr(p[0], p[1]) })).sort((u, v) => u.v - v.v);
+  return { D, n: 2, r: list.map(o => o.v), s: list.map(o => o.s), q };
+}
+function rootsSolution(a, b, c) {
+  const D = b * b - 4 * a * c, out = [];
+  out.push('<i>a</i> = ' + fmt(a) + ', <i>b</i> = ' + fmt(b) + ', <i>c</i> = ' + fmt(c));
+  out.push(dLine(a, b, c));
+  if (D < 0) out.push('<i>D</i> &lt; 0 <span class="w">— корней нет</span>');
+  else if (D === 0) out.push('<i>D</i> = 0 <span class="w">— один корень:</span> ' + X + ' = ' + frac(MINUS + '<i>b</i>', '2<i>a</i>') + ' = ' + frac(fmt(-b), '2·' + par(a)) + ' = ' + fracStr(-b, 2 * a));
+  else {
+    const q = Math.sqrt(D);
+    out.push('<i>D</i> &gt; 0 <span class="w">— два корня,</span> √<span class="rad"><i>D</i></span> = ' + fmt(q));
+    out.push(X + '<sub>1</sub> = ' + frac(fmt(-b) + ' ' + MINUS + ' ' + fmt(q), '2·' + par(a)) + ' = ' + frac(fmt(-b - q), fmt(2 * a)) + ' = ' + fracStr(-b - q, 2 * a));
+    out.push(X + '<sub>2</sub> = ' + frac(fmt(-b) + ' + ' + fmt(q), '2·' + par(a)) + ' = ' + frac(fmt(-b + q), fmt(2 * a)) + ' = ' + fracStr(-b + q, 2 * a));
+  }
+  return '<div class="sol"><div>' + out.join('</div><div>') + '</div></div>';
+}
+function taskRoots(d, ctx) {
+  const a = d.a, b = d.b, c = d.c, A = rootsOf(a, b, c);
+  let errors = 0, done = false;
+  const fb = FB();
+  const iD = numIn('Дискриминант D'), i1 = numIn('Корень x1'), i2 = numIn('Корень x2');
+  iD.style.width = '6em';
+  const segN = Seg('Количество корней', [{ v: 2, l: 'Два корня' }, { v: 1, l: 'Один корень' }, { v: 0, l: 'Корней нет' }], true);
+  const f1 = field(X + '<sub>1</sub> =', i1), f2 = field(X + '<sub>2</sub> =', i2);
+  const lab1 = f1.firstChild;
+  const none = h('p', { class: 'sub' }, 'Сначала ответь на вопрос 2 — появятся поля для корней.');
+  const rootRow = h('div', { class: 'row' }, none, f1, f2);
+  function layout(n) {
+    none.hidden = n === 2 || n === 1; f1.hidden = !(n === 2 || n === 1); f2.hidden = n !== 2;
+    lab1.innerHTML = n === 1 ? X + ' =' : X + '<sub>1</sub> =';
+    if (n === 0) none.textContent = 'Корней нет — вводить нечего.';
+    i1.classList.remove('ok', 'bad'); i2.classList.remove('ok', 'bad');
+  }
+  layout(null);
+  segN.onchange = layout;
+  const answerLine = A.n === 2 ? 'Ответ: <span class="m">' + X + '<sub>1</sub> = ' + A.s[0] + ', ' + X + '<sub>2</sub> = ' + A.s[1] + '</span>.'
+    : A.n === 1 ? 'Ответ: <span class="m">' + X + ' = ' + A.s[0] + '</span>.' : 'Ответ: корней нет.';
+  function showAnswer(prefix) {
+    done = true;
+    iD.value = fmt(A.D); iD.className = 'in ok'; iD.readOnly = true;
+    segN.set(A.n); layout(A.n); segN.mark(true); segN.lock();
+    if (A.n >= 1) { i1.value = A.s[0]; i1.className = 'in ok'; i1.readOnly = true; }
+    if (A.n === 2) { i2.value = A.s[1]; i2.className = 'in ok'; i2.readOnly = true; }
+    fb.set('ok', '<p>' + prefix + '</p>' + rootsSolution(a, b, c) + '<p><b>' + answerLine + '</b></p>');
+    btnCheck.hidden = true; btnShow.hidden = true;
+  }
+  function check() {
+    if (done) return;
+    if (iD.value.trim() === '') { iD.classList.add('bad'); fb.set('info', 'Начни с дискриминанта: <span class="m"><i>D</i> = <i>b</i><sup>2</sup> ' + MINUS + ' 4<i>ac</i></span>.'); return; }
+    if (segN.value === null) { fb.set('info', 'Выбери, сколько корней у трёхчлена.'); return; }
+    const need = segN.value === 2 ? [i1, i2] : segN.value === 1 ? [i1] : [];
+    if (need.some(i => i.value.trim() === '')) { need.forEach(i => { if (i.value.trim() === '') i.classList.add('bad'); }); fb.set('info', 'Впиши ' + (need.length === 2 ? 'оба корня' : 'корень') + '.'); return; }
+    const gd = setMark(iD, same(parseNum(iD.value), A.D));
+    const gn = segN.mark(segN.value === A.n);
+    let gr = true;
+    if (gn && A.n === 1) gr = setMark(i1, same(parseNum(i1.value), A.r[0]));
+    if (gn && A.n === 2) {
+      const u = parseNum(i1.value), v = parseNum(i2.value);
+      if (same(u, A.r[0]) && same(v, A.r[1]) || same(u, A.r[1]) && same(v, A.r[0])) { setMark(i1, true); setMark(i2, true); }
+      else { gr = false; setMark(i1, same(u, A.r[0]) || same(u, A.r[1])); setMark(i2, (same(v, A.r[0]) || same(v, A.r[1])) && !same(u, v)); }
+    }
+    if (gd && gn && gr) { showAnswer('<b>Верно.</b>'); ctx.solved(errors === 0); return; }
+    errors++;
+    const tips = [];
+    if (!gd) tips.push('<b>Дискриминант</b> посчитан неверно. Выпиши <i>a</i>, <i>b</i>, <i>c</i> и подставь в <span class="m"><i>D</i> = <i>b</i><sup>2</sup> ' + MINUS + ' 4<i>ac</i></span>.' + (a * c < 0 ? ' Здесь <i>a</i> и <i>c</i> разных знаков — значит, после вычитания получится сумма.' : ''));
+    if (!gn) tips.push('<b>Количество корней</b> зависит от знака <i>D</i>: если <i>D</i> &gt; 0 — два корня, <i>D</i> = 0 — один, <i>D</i> &lt; 0 — корней нет.');
+    else if (!gr) tips.push('<b>Корни</b> найдены неверно. Формула: ' + X + ' = ' + frac(MINUS + '<i>b</i> ± √<span class="rad"><i>D</i></span>', '2<i>a</i>') +
+      '. Здесь ' + MINUS + '<i>b</i> = ' + fmt(-b) + ', а в знаменателе 2<i>a</i> = ' + fmt(2 * a) + '.');
+    fb.set('bad', '<p>' + tips.join('</p><p>') + '</p>');
+  }
+  const btnCheck = h('button', { class: 'btn', type: 'button', onclick: check }, 'Проверить');
+  const btnShow = h('button', { class: 'linkbtn', type: 'button', onclick: () => { if (!done) { showAnswer('Разбор решения:'); ctx.hinted(); } } }, 'Показать решение');
+  const root = h('div', null,
+    h('h2', null, 'Найди корни квадратного трёхчлена'),
+    h('div', { class: 'card', style: 'margin-top:1.1em;max-width:46em' },
+      h('div', { class: 'formula', style: 'margin-top:0', html: polyHTML(a, b, c) }),
+      qBlock(1, 'Вычисли дискриминант', h('div', { class: 'row' }, field('<i>D</i> =', iD))),
+      qBlock(2, 'Сколько корней у трёхчлена?', segN.el),
+      qBlock(3, 'Найди корни по формуле', rootRow, h('p', { class: 'sub', style: 'margin-top:.5em' }, 'Дробный ответ можно записать как 0,5 или 1/2. Порядок корней не важен.')),
+      h('div', { class: 'row actions' }, btnCheck, btnShow), fb));
+  onEnter(root, check);
+  if (ctx.restore) showAnswer('Задание уже разобрано.');
+  return root;
+}
+function genRoots() {
+  for (;;) {
+    const kind = pick([2, 2, 2, 2, 2, 1, 0]);
+    let a, b, c;
+    if (kind === 2) {
+      a = pick([1, 1, 1, -1, 2]);
+      let r1 = R(-6, 6), r2 = R(-6, 6);
+      if (a === 2 && Math.random() < .7) r1 = (2 * R(-3, 2) + 1) / 2;
+      if (r1 === r2) continue;
+      b = -a * (r1 + r2); c = a * r1 * r2;
+    } else if (kind === 1) {
+      a = pick([1, 1, -1, 4]);
+      if (a === 4) { const k = pick([-3, -1, 1, 3]); b = -4 * k; c = k * k; }
+      else { const r = R(-5, 5); if (r === 0) continue; b = -2 * a * r; c = a * r * r; }
+    } else {
+      a = pick([1, 1, 2]); const p = R(-3, 3), q = R(1, 4);
+      b = -2 * a * p; c = a * p * p + q;
+    }
+    if (Math.abs(b) > 20 || Math.abs(c) > 40 || (b === 0 && c === 0)) continue;
+    return { a, b, c };
+  }
+}
+
+/* =====================================================================
+   Содержание урока
+   ===================================================================== */
+const BLOCKS = [
+  { n: 1, key: 'b1', title: 'График по точкам', short: 'График', desc: 'Заполни таблицу значений, отметь точки и проведи через них параболу.', fn: taskPlot, gen: genPlot,
+    tasks: [{ a: 1, b: 0, c: 0 }, { a: 1, b: 0, c: -4 }, { a: -1, b: 2, c: 3 }, { a: 1, b: 4, c: 3 }, { a: 2, b: -4, c: -1 }] },
+  { n: 2, key: 'b2', title: 'Знаки a и c по графику', short: 'Знаки a и c', desc: 'Посмотри на параболу и определи знаки коэффициентов a и c.', fn: taskSigns, gen: genSigns,
+    tasks: [{ a: 1, b: -4, c: 1 }, { a: -1, b: -2, c: 3 }, { a: 1, b: 2, c: -3 }, { a: -0.5, b: 2, c: -3 }, { a: 1, b: -4, c: 0 }, { a: -1, b: -6, c: -4 }, { a: 0.5, b: 2, c: 4 }, { a: -1, b: 2, c: 0 }] },
+  { n: 3, key: 'b3', title: 'Коэффициенты и дискриминант', short: 'Дискриминант', desc: 'Выпиши a, b, c из записи функции и вычисли D = b² − 4ac.', fn: taskCoef, gen: genCoef,
+    tasks: [{ a: 2, b: -5, c: 3 }, { a: 1, b: 6, c: 9 }, { a: -1, b: 4, c: -5 }, { a: 3, b: 0, c: -12 }, { a: -2, b: 5, c: 0, order: 'bac' }, { a: 1, b: -6, c: 7, order: 'cba' }, { a: 1, b: -1, c: -12 }, { a: -3, b: 2, c: 1 }] },
+  { n: 4, key: 'b4', title: 'Корни по формуле', short: 'Корни', desc: 'Найди корни трёхчлена через дискриминант.', fn: taskRoots, gen: genRoots,
+    tasks: [{ a: 1, b: -5, c: 6 }, { a: 1, b: 2, c: -8 }, { a: 2, b: -5, c: 2 }, { a: 1, b: -6, c: 9 }, { a: 1, b: 2, c: 5 }, { a: -1, b: 4, c: 5 }, { a: 3, b: 7, c: 2 }, { a: 4, b: -4, c: 1 }] }
+];
+const TOTAL = BLOCKS.reduce((s, b) => s + b.tasks.length, 0);
+
+/* ---------- прогресс (хранится в браузере ученика) ---------- */
+const KEY = 'kvadratnyi-trehchlen-v1';
+let progress = {};
+try { progress = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { progress = {}; }
+function save() { try { localStorage.setItem(KEY, JSON.stringify(progress)); } catch (e) {} }
+function mark(id, st, clean) {
+  const p = progress[id];
+  if (p && p.st === 'ok') return;
+  if (p && p.st === 'hint' && st === 'hint') return;
+  progress[id] = st === 'ok' ? { st: 'ok', clean: !!clean && !p } : { st: 'hint' };
+  save(); updateNav();
+  if (st === 'ok') { const n = document.getElementById('next'); n.classList.remove('go'); void n.offsetWidth; n.classList.add('go'); }
+}
+function blockStat(b) {
+  let ok = 0, clean = 0, hint = 0;
+  b.tasks.forEach((t, i) => { const p = progress[b.key + '-' + (i + 1)]; if (!p) return; if (p.st === 'ok') { ok++; if (p.clean) clean++; } else hint++; });
+  return { ok, clean, hint, n: b.tasks.length };
+}
+
+/* ---------- слайды ---------- */
+const slides = [];
+slides.push({ id: 'start', sec: 0, dot: '★', name: 'Титульный слайд', fresh: true, render: renderTitle });
+slides.push({ id: 'intro', sec: 0, dot: 'i', name: 'Что такое квадратный трёхчлен', render: renderIntro });
+BLOCKS.forEach(b => {
+  slides.push({ id: b.key, sec: b.n, dot: 'T', name: 'Теория', render: THEORY(b) });
+  b.tasks.forEach((t, i) => slides.push({ id: b.key + '-' + (i + 1), sec: b.n, dot: String(i + 1), name: 'Задание ' + (i + 1), task: true, render: el => {
+    const id = b.key + '-' + (i + 1);
+    el.append(h('p', { class: 'kicker' }, 'Блок ' + b.n + ' · Задание ' + (i + 1) + ' из ' + b.tasks.length));
+    el.append(b.fn(t, { restore: progress[id] && progress[id].st, solved: clean => mark(id, 'ok', clean), hinted: () => mark(id, 'hint') }));
+  } }));
+  slides.push({ id: b.key + '-t', sec: b.n, dot: '∞', name: 'Тренажёр', render: el => renderTrainer(el, b) });
+});
+slides.push({ id: 'results', sec: 5, dot: '✓', name: 'Итоги', fresh: true, render: renderResults });
+const SECTIONS = [{ n: 0, label: 'Введение', num: '★' }].concat(BLOCKS.map(b => ({ n: b.n, label: b.short, num: String(b.n), block: b })), [{ n: 5, label: 'Итоги', num: '✓' }]);
+
+function renderTitle(el) {
+  const P = Plot({ xmin: -4, xmax: 6, ymin: -6, ymax: 6, unit: 36, pad: 0, ticks: 'none' });
+  const curve = P.curve(1, -2, -3);
+  [[-2, 5], [-1, 0], [0, -3], [1, -4], [2, -3], [3, 0], [4, 5]].forEach(p => P.dot(p[0], p[1]));
+  setTimeout(() => drawAnim(curve, 1600), 60);
+  el.append(h('div', { class: 'hero' },
+    h('div', null,
+      h('p', { class: 'kicker' }, 'Алгебра · интерактивный урок'),
+      h('h1', { html: 'Квадратный <mark>трёхчлен</mark>' }),
+      h('div', { class: 'formula', html: '<i>ax</i><sup>2</sup> + <i>bx</i> + <i>c</i>' }),
+      h('p', { class: 'lead' }, 'Четыре блока заданий: от графика по точкам до корней по формуле. Отвечай прямо на слайдах — проверка мгновенная, а в конце каждого блока есть тренажёр с бесконечными заданиями.'),
+      h('div', { class: 'row', style: 'margin-top:1.3em' },
+        h('button', { class: 'btn big', type: 'button', onclick: () => go(1) }, 'Начать урок →'),
+        h('span', { class: 'sub' }, 'Листать: кнопки внизу или клавиши ← →'))),
+    h('div', { class: 'art' }, P.svg)));
+  el.append(h('div', { class: 'blocks' }, BLOCKS.map(b => {
+    const s = blockStat(b);
+    return h('button', { class: 'bcard', type: 'button', onclick: () => goId(b.key) },
+      h('span', { class: 'bn' }, 'Блок ' + b.n), h('span', { class: 'bt' }, b.title), h('span', { class: 'bd' }, b.desc),
+      h('span', { class: 'meter' }, h('span', { style: 'width:' + (100 * s.ok / s.n) + '%' })),
+      h('span', { class: 'bp' }, 'Решено ' + s.ok + ' из ' + s.n));
+  })));
+}
+
+function renderIntro(el) {
+  const P = Plot({ xmin: -8, xmax: 8, ymin: -8, ymax: 8, unit: 28, ticks: 'one', fs: 16, label: 'График функции, который меняется вместе с ползунками' });
+  P.svg.style.maxWidth = '500px';
+  const curve = P.curve(1, -2, -3);
+  const dotC = P.dot(0, -3, 'p-mark', 7), r1 = P.dot(0, 0, 'p-dot', 6), r2 = P.dot(0, 0, 'p-dot', 6);
+  const out = h('div', { class: 'formula mid' }), chips = h('div', { class: 'chips', 'aria-live': 'polite' });
+  const mk = (name, min, max, step, val) => {
+    const inp = h('input', { type: 'range', min, max, step, value: val, 'aria-label': 'Коэффициент ' + name });
+    const lab = h('span');
+    inp.addEventListener('input', upd);
+    return { inp, lab, row: h('label', { class: 'sl' }, lab, inp), name };
+  };
+  const sa = mk('a', -3, 3, 0.5, 1), sb = mk('b', -6, 6, 1, -2), sc = mk('c', -6, 6, 1, -3);
+  function upd() {
+    const a = +sa.inp.value, b = +sb.inp.value, c = +sc.inp.value;
+    [sa, sb, sc].forEach(s => s.lab.innerHTML = '<i>' + s.name + '</i> = ' + fmt(+s.inp.value));
+    out.innerHTML = funcHTML(a, b, c);
+    curve.setAttribute('d', P.pathD(a, b, c));
+    dotC.setAttribute('cy', P.sy(c));
+    const list = [];
+    let roots = [];
+    if (a === 0) {
+      list.push(['warn', 'При <span class="m"><i>a</i> = 0</span> слагаемое с ' + X2 + ' исчезает. Это уже <b>не квадратный трёхчлен</b>, а его график — прямая. Поэтому в определении и стоит условие <span class="m"><i>a</i> ≠ 0</span>.']);
+    } else {
+      const D = b * b - 4 * a * c;
+      list.push(['', '<span class="m"><i>a</i> ' + (a > 0 ? '&gt;' : '&lt;') + ' 0</span> — ветви параболы направлены <b>' + (a > 0 ? 'вверх' : 'вниз') + '</b>.']);
+      list.push(['', '<span class="m"><i>c</i> = ' + fmt(c) + '</span> — парабола пересекает ось <i>Oy</i> в точке <b class="m">(0; ' + fmt(c) + ')</b> (красная точка).']);
+      list.push(['', '<span class="m"><i>D</i> = ' + fmt(D) + (D > 0 ? ' &gt; 0</span> — парабола пересекает ось <i>Ox</i> в <b>двух точках</b> (синие точки).' : D === 0 ? '</span> — парабола <b>касается</b> оси <i>Ox</i>.' : ' &lt; 0</span> — парабола <b>не пересекает</b> ось <i>Ox</i>.')]);
+      if (D >= 0) roots = [(-b - Math.sqrt(D)) / (2 * a), (-b + Math.sqrt(D)) / (2 * a)];
+    }
+    [r1, r2].forEach((r, i) => {
+      const ok = roots.length && Math.abs(roots[i]) <= 8;
+      r.setAttribute('visibility', ok ? 'visible' : 'hidden');
+      if (ok) r.setAttribute('cx', P.sx(roots[i]));
+      r.setAttribute('cy', P.sy(0));
+    });
+    chips.innerHTML = list.map(c => '<div class="chip ' + c[0] + '">' + c[1] + '</div>').join('');
+  }
+  upd();
+  el.append(h('p', { class: 'kicker' }, 'Введение'), h('h2', null, 'Что такое квадратный трёхчлен'),
+    h('div', { class: 'split' },
+      h('div', null,
+        h('div', { class: 'card' },
+          h('p', { html: '<b>Квадратный трёхчлен</b> — это выражение вида' }),
+          h('div', { class: 'formula', html: '<i>ax</i><sup>2</sup> + <i>bx</i> + <i>c</i>' }),
+          h('p', { html: 'где ' + X + ' — переменная, <span class="m"><i>a</i>, <i>b</i>, <i>c</i></span> — числа, причём <mark class="m"><i>a</i> ≠ 0</mark>.' }),
+          h('div', { class: 'legend' },
+            h('div', { html: '<b>a</b> — старший коэффициент (при ' + X2 + ')' }),
+            h('div', { html: '<b>b</b> — второй коэффициент (при ' + X + ')' }),
+            h('div', { html: '<b>c</b> — свободный член (без ' + X + ')' }))),
+        h('p', { style: 'margin-top:1em', html: 'График функции <span class="m nb"><i>y</i> = <i>ax</i><sup>2</sup> + <i>bx</i> + <i>c</i></span> — <b>парабола</b>. Подвигай ползунки и посмотри, за что отвечает каждый коэффициент.' }),
+        h('div', { class: 'sliders' }, sa.row, sb.row, sc.row), chips),
+      h('div', { class: 'card plotcard sticky' }, out, P.svg)));
+}
+
+function THEORY(b) {
+  return el => {
+    el.append(h('p', { class: 'kicker' }, 'Блок ' + b.n + ' · Теория'));
+    [theory1, theory2, theory3, theory4][b.n - 1](el);
+    el.append(h('div', { class: 'row', style: 'margin-top:1.4em' },
+      h('button', { class: 'btn big', type: 'button', onclick: () => goId(b.key + '-1') }, 'К заданиям блока ' + b.n + ' →'),
+      h('span', { class: 'sub' }, b.tasks.length + ' заданий и тренажёр')));
+  };
+}
+function theory1(el) {
+  const P = Plot({ xmin: -3, xmax: 5, ymin: -5, ymax: 6, unit: 36, ticks: 'all', label: 'Пример: парабола y = x² − 2x − 3, построенная по семи точкам' });
+  P.svg.style.maxWidth = '400px';
+  P.line(1, -5, 1, 6, 'p-sym');
+  const curve = P.curve(1, -2, -3);
+  const pts = [[-2, 5], [-1, 0], [0, -3], [1, -4], [2, -3], [3, 0], [4, 5]];
+  pts.forEach(p => P.dot(p[0], p[1], p[0] === 1 ? 'p-mark' : 'p-dot', p[0] === 1 ? 7 : 6));
+  setTimeout(() => drawAnim(curve, 1500), 80);
+  el.append(h('h2', null, 'Как построить параболу по точкам'),
+    h('div', { class: 'split wide-left' },
+      h('div', null,
+        h('ol', { class: 'steps' },
+          h('li', { class: 'step' }, h('h3', null, 'Найди вершину'), h('p', { html: 'Абсцисса вершины: <span class="m">' + X + '<sub>0</sub> = ' + frac(MINUS + '<i>b</i>', '2<i>a</i>') + '</span>. Подставь её в формулу — получишь <span class="m"><i>y</i><sub>0</sub></span>.' })),
+          h('li', { class: 'step' }, h('h3', null, 'Составь таблицу значений'), h('p', { html: 'Возьми по несколько значений ' + X + ' слева и справа от вершины и вычисли <i>y</i>.' })),
+          h('li', { class: 'step' }, h('h3', null, 'Отметь точки'), h('p', { html: 'Каждый столбец таблицы — точка (' + X + '; <i>y</i>) на координатной плоскости.' })),
+          h('li', { class: 'step' }, h('h3', null, 'Соедини плавной линией'), h('p', { html: 'Парабола симметрична относительно прямой <span class="m">' + X + ' = ' + X + '<sub>0</sub></span>. Не соединяй точки по линейке — это кривая, а не ломаная.' }))),
+        h('div', { class: 'card', style: 'margin-top:12px' },
+          h('p', { html: '<b>Пример.</b> <span class="m">' + funcHTML(1, -2, -3) + '</span>' }),
+          h('p', { class: 'm', style: 'margin:.4em 0 .6em', html: X + '<sub>0</sub> = ' + frac('2', '2·1') + ' = 1, &nbsp; <i>y</i><sub>0</sub> = 1 ' + MINUS + ' 2 ' + MINUS + ' 3 = ' + MINUS + '4' }),
+          h('div', { class: 'tblwrap' }, h('table', { class: 'vals' }, h('tbody', null,
+            h('tr', null, h('th', { html: X }), pts.map(p => h('td', null, fmt(p[0])))),
+            h('tr', null, h('th', { html: '<i>y</i>' }), pts.map(p => h('td', null, fmt(p[1]))))))))),
+      h('div', { class: 'card plotcard' }, P.svg)));
+}
+function theory2(el) {
+  el.append(h('h2', null, 'Что график говорит о коэффициентах'),
+    h('div', { class: 'split' },
+      h('div', { class: 'card' },
+        h('h3', { html: 'Знак <i>a</i> — куда направлены ветви' }),
+        h('p', { class: 'sub', style: 'margin-top:.3em' }, 'Старший коэффициент отвечает за направление ветвей параболы.'),
+        h('div', { class: 'minis' },
+          mini(0.5, 0, -3, '<b>a &gt; 0</b><br>ветви вверх'),
+          mini(-0.5, 0, 3, '<b>a &lt; 0</b><br>ветви вниз'))),
+      h('div', { class: 'card' },
+        h('h3', { html: 'Знак <i>c</i> — где парабола пересекает ось <i>Oy</i>' }),
+        h('p', { class: 'sub', style: 'margin-top:.3em', html: 'При ' + X + ' = 0 получаем <span class="m"><i>y</i> = <i>a</i>·0<sup>2</sup> + <i>b</i>·0 + <i>c</i> = <i>c</i></span>. Значит, парабола проходит через точку (0; <i>c</i>).' }),
+        h('div', { class: 'minis' },
+          mini(0.5, -2, 3, '<b>c &gt; 0</b><br>выше нуля', { c: true }),
+          mini(0.5, -2, 0, '<b>c = 0</b><br>через начало координат', { c: true }),
+          mini(0.5, -2, -2, '<b>c &lt; 0</b><br>ниже нуля', { c: true })))),
+    h('p', { class: 'note', style: 'margin-top:1.1em', html: '<b>Порядок действий.</b> Сначала смотри на ветви — это знак <i>a</i>. Потом найди точку пересечения с вертикальной осью <i>Oy</i> — это знак <i>c</i>. Положение вершины на знак <i>c</i> не влияет.' }));
+}
+function theory3(el) {
+  el.append(h('h2', null, 'Коэффициенты и дискриминант'),
+    h('div', { class: 'split' },
+      h('div', null,
+        h('div', { class: 'card' },
+          h('p', { html: '<b>Дискриминант</b> квадратного трёхчлена — это число' }),
+          h('div', { class: 'formula', html: '<i>D</i> = <i>b</i><sup>2</sup> ' + MINUS + ' 4<i>ac</i>' }),
+          h('p', { style: 'margin-top:.6em', html: '<b>Пример.</b> <span class="m">' + funcHTML(2, -5, 3) + '</span>' }),
+          h('div', { class: 'sol' }, h('div', { html: '<i>a</i> = 2, <i>b</i> = ' + MINUS + '5, <i>c</i> = 3' }), h('div', { html: dLine(2, -5, 3) }))),
+        h('div', { class: 'note', style: 'margin-top:12px' },
+          h('b', null, 'Где чаще всего ошибаются'),
+          h('ul', { class: 'list' },
+            h('li', { html: 'Знак входит в коэффициент: в записи <span class="m nb">' + polyHTML(2, -5, 3) + '</span> коэффициент <span class="m nb"><i>b</i> = ' + MINUS + '5</span>, а не 5.' }),
+            h('li', { html: 'Нет слагаемого — коэффициент равен нулю: в записи <span class="m nb">' + polyHTML(3, 0, -12) + '</span> коэффициент <span class="m nb"><i>b</i> = 0</span>.' }),
+            h('li', { html: 'Нет числа перед ' + X2 + ' — значит <span class="m nb"><i>a</i> = 1</span>; стоит только минус — <span class="m nb"><i>a</i> = ' + MINUS + '1</span>.' }),
+            h('li', { html: 'Слагаемые могут стоять в любом порядке: в записи <span class="m nb">' + polyHTML(1, -6, 7, 'cba') + '</span> коэффициенты <span class="m nb"><i>a</i> = 1, <i>b</i> = ' + MINUS + '6, <i>c</i> = 7</span>.' })))),
+      h('div', { class: 'card' },
+        h('h3', null, 'Что показывает знак дискриминанта'),
+        h('p', { class: 'sub', style: 'margin-top:.3em', html: 'Сколько раз парабола встречается с осью <i>Ox</i> — столько корней у трёхчлена.' }),
+        h('div', { class: 'minis' },
+          mini(0.5, 0, -2, '<b>D &gt; 0</b><br>два корня', { roots: true }),
+          mini(0.5, 0, 0, '<b>D = 0</b><br>один корень', { roots: true }),
+          mini(0.5, 0, 2, '<b>D &lt; 0</b><br>корней нет', { roots: true })))));
+}
+function theory4(el) {
+  el.append(h('h2', null, 'Корни квадратного трёхчлена'),
+    h('div', { class: 'split' },
+      h('div', null,
+        h('div', { class: 'card' },
+          h('p', { html: '<b>Корень трёхчлена</b> — значение ' + X + ', при котором <span class="m nb"><i>ax</i><sup>2</sup> + <i>bx</i> + <i>c</i> = 0</span>.' }),
+          h('div', { class: 'formula', html: X + '<sub>1,2</sub> = ' + frac(MINUS + '<i>b</i> ± √<span class="rad"><i>D</i></span>', '2<i>a</i>') }),
+          h('p', { class: 'sub', html: 'где <span class="m"><i>D</i> = <i>b</i><sup>2</sup> ' + MINUS + ' 4<i>ac</i></span>' })),
+        h('ol', { class: 'steps' },
+          h('li', { class: 'step' }, h('h3', { html: 'Выпиши <i>a</i>, <i>b</i>, <i>c</i> и вычисли дискриминант' })),
+          h('li', { class: 'step' }, h('h3', { html: 'Сравни <i>D</i> с нулём' }),
+            h('p', { html: '<span class="m"><i>D</i> &gt; 0</span> — два корня по формуле;<br><span class="m"><i>D</i> = 0</span> — один корень <span class="m nb">' + X + ' = ' + frac(MINUS + '<i>b</i>', '2<i>a</i>') + '</span>;<br><span class="m"><i>D</i> &lt; 0</span> — корней нет.' })))),
+      h('div', { class: 'card' },
+        h('p', { html: '<b>Пример.</b> Найдём корни трёхчлена' }),
+        h('div', { class: 'formula mid', html: polyHTML(2, -5, 2) }),
+        h('div', { html: rootsSolution(2, -5, 2) }),
+        h('p', { style: 'margin-top:.5em', html: '<b>Ответ:</b> <b class="m">' + X + '<sub>1</sub> = 0,5, ' + X + '<sub>2</sub> = 2</b>.' }),
+        h('p', { class: 'note', style: 'margin-top:.9em', html: '<b>Проверка.</b> Подставь корень в трёхчлен: <span class="m">2·2<sup>2</sup> ' + MINUS + ' 5·2 + 2 = 8 ' + MINUS + ' 10 + 2 = 0</span>. Получился ноль — корень найден верно.' }))));
+}
+
+function renderTrainer(el, b) {
+  const tk = b.key + '-t';
+  let count = (progress[tk] && progress[tk].n) || 0;
+  const badge = h('span', { class: 'badge' }, 'Решено: ' + count);
+  const holder = h('div');
+  const btn = h('button', { class: 'btn ghost', type: 'button', onclick: fresh }, 'Новое задание ↻');
+  function fresh() {
+    btn.classList.remove('go');
+    holder.replaceChildren(b.fn(b.gen(), {
+      solved: () => { count++; progress[tk] = { n: count }; save(); badge.textContent = 'Решено: ' + count; btn.classList.add('go'); },
+      hinted: () => {}
+    }));
+  }
+  el.append(h('div', { class: 'trainer-head' }, h('p', { class: 'kicker', style: 'margin:0' }, 'Блок ' + b.n + ' · Тренажёр · задания не заканчиваются'), h('div', { class: 'row' }, badge, btn)), holder);
+  fresh();
+}
+
+function renderResults(el) {
+  let ok = 0, clean = 0;
+  const rows = BLOCKS.map(b => {
+    const s = blockStat(b); ok += s.ok; clean += s.clean;
+    const tr = (progress[b.key + '-t'] && progress[b.key + '-t'].n) || 0;
+    return h('div', { class: 'card resrow' },
+      h('div', null, h('div', { class: 'rt' }, 'Блок ' + b.n + '. ' + b.title),
+        h('div', { class: 'rs' }, 'Решено ' + s.ok + ' из ' + s.n + ' · с первой попытки ' + s.clean + (s.hint ? ' · с подсказкой ' + s.hint : '') + (tr ? ' · в тренажёре ' + tr : ''))),
+      h('div', { class: 'meter', role: 'img', 'aria-label': 'Решено ' + s.ok + ' из ' + s.n }, h('span', { style: 'width:' + (100 * s.ok / s.n) + '%' })),
+      h('button', { class: 'btn ghost', type: 'button', onclick: () => {
+        const i = b.tasks.findIndex((t, k) => !(progress[b.key + '-' + (k + 1)] && progress[b.key + '-' + (k + 1)].st === 'ok'));
+        goId(i < 0 ? b.key + '-t' : b.key + '-' + (i + 1));
+      } }, s.ok === s.n ? 'В тренажёр' : s.ok + s.hint === 0 ? 'Начать' : 'Продолжить'));
+  });
+  const msg = ok === TOTAL ? 'Все задания решены самостоятельно. Отличная работа! Закрепи результат в тренажёрах.'
+    : ok >= TOTAL * .7 ? 'Хороший результат. Осталось дорешать несколько заданий.'
+    : ok > 0 ? 'Начало положено. Вернись к блокам, где остались нерешённые задания.'
+    : 'Пока не решено ни одного задания. Начни с блока 1.';
+  let armed = false;
+  const reset = h('button', { class: 'linkbtn', type: 'button', onclick: () => {
+    if (!armed) { armed = true; reset.textContent = 'Нажми ещё раз, чтобы стереть все результаты'; return; }
+    progress = {}; save(); cache.forEach(e => e.remove()); cache.clear(); updateNav(); show();
+  } }, 'Сбросить результаты и начать заново');
+  el.append(h('p', { class: 'kicker' }, 'Итоги урока'), h('h2', null, 'Что получилось'),
+    h('div', { class: 'row', style: 'margin-top:.8em;align-items:flex-end' },
+      h('div', { class: 'total', html: ok + '<small> из ' + TOTAL + ' заданий</small>' }),
+      h('p', { class: 'lead', style: 'margin:0' }, msg)),
+    h('p', { class: 'sub', style: 'margin-top:.4em' }, 'С первой попытки, без ошибок: ' + clean + '. Задания, где открыто готовое решение, в счёт не идут.'),
+    h('div', { class: 'res' }, rows),
+    h('div', { class: 'actions' }, reset));
+}
+
+/* ---------- навигация ---------- */
+const stageEl = document.getElementById('stage'), tabsEl = document.getElementById('tabs'), dotsEl = document.getElementById('dots'),
+  posEl = document.getElementById('pos'), prevEl = document.getElementById('prev'), nextEl = document.getElementById('next');
+const cache = new Map();
+let cur = 0;
+
+function show() {
+  const s = slides[cur];
+  cache.forEach(e => e.hidden = true);
+  let el = cache.get(s.id);
+  if (el && s.fresh) { el.remove(); cache.delete(s.id); el = null; }
+  if (!el) { el = h('section', { class: 'slide', 'aria-label': s.name }); cache.set(s.id, el); stageEl.append(el); s.render(el); }
+  el.hidden = false;
+  el.style.animation = 'none'; void el.offsetWidth; el.style.animation = '';
+  stageEl.scrollTop = 0;
+  nextEl.classList.remove('go');
+  updateNav();
+  try { history.replaceState(null, '', '#' + s.id); } catch (e) {}
+}
+function go(i) { i = Math.max(0, Math.min(slides.length - 1, i)); if (i === cur && cache.has(slides[i].id) && !slides[i].fresh) return; cur = i; show(); }
+function goId(id) { const i = slides.findIndex(s => s.id === id); if (i >= 0) { cur = i; show(); } }
+
+function updateNav() {
+  const s = slides[cur];
+  tabsEl.replaceChildren(...SECTIONS.map(sec => {
+    const st = sec.block ? blockStat(sec.block) : null;
+    const t = h('button', { class: 'tab' + (st && st.ok === st.n ? ' full' : ''), type: 'button', 'aria-current': sec.n === s.sec ? 'true' : 'false',
+      title: sec.block ? 'Блок ' + sec.n + '. ' + sec.block.title : sec.label,
+      onclick: () => go(slides.findIndex(x => x.sec === sec.n)) },
+      h('span', { class: 'num' }, sec.num), h('span', { class: 'lbl' }, sec.label), st ? h('span', { class: 'cnt' }, st.ok + '/' + st.n) : null);
+    return t;
+  }));
+  const curTab = tabsEl.querySelector('[aria-current="true"]');
+  if (curTab && curTab.scrollIntoView) try { curTab.scrollIntoView({ block: 'nearest', inline: 'nearest' }); } catch (e) {}
+  dotsEl.replaceChildren(...slides.map((x, i) => {
+    if (x.sec !== s.sec) return null;
+    const p = x.task && progress[x.id];
+    return h('button', { class: 'dot' + (p ? ' ' + p.st : ''), type: 'button', 'aria-current': i === cur ? 'true' : 'false',
+      'aria-label': x.name + (p ? (p.st === 'ok' ? ' — решено' : ' — открыто решение') : ''), title: x.name, onclick: () => go(i) }, x.dot);
+  }).filter(Boolean));
+  const curDot = dotsEl.querySelector('[aria-current="true"]');
+  if (curDot && curDot.scrollIntoView) try { curDot.scrollIntoView({ block: 'nearest', inline: 'nearest' }); } catch (e) {}
+  posEl.textContent = 'Слайд ' + (cur + 1) + ' из ' + slides.length;
+  prevEl.disabled = cur === 0; nextEl.disabled = cur === slides.length - 1;
+}
+
+prevEl.addEventListener('click', () => go(cur - 1));
+nextEl.addEventListener('click', () => go(cur + 1));
+document.getElementById('brand').addEventListener('click', () => go(0));
+document.addEventListener('keydown', e => {
+  if (e.altKey || e.ctrlKey || e.metaKey) return;
+  if (e.target.closest && e.target.closest('input,textarea,select,[contenteditable]')) return;
+  if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); go(cur + 1); }
+  else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(cur - 1); }
+});
+const fsBtn = document.getElementById('fs');
+if (!document.fullscreenEnabled) fsBtn.hidden = true;
+fsBtn.addEventListener('click', () => {
+  try { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen().catch(() => {}); } catch (e) {}
+});
+function fromHash() { let id = ''; try { id = decodeURIComponent(location.hash.replace(/^#\/?/, '')); } catch (e) {} const i = slides.findIndex(s => s.id === id); return i; }
+window.addEventListener('hashchange', () => { const i = fromHash(); if (i >= 0 && i !== cur) { cur = i; show(); } });
+cur = Math.max(0, fromHash());
+show();
+</script>
+</body>
+</html>
